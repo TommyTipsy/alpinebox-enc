@@ -15,6 +15,7 @@ Since installing Alpine with ZFS and ZfsBootmenu needs a whole tutorial with man
 * Perfect for running docker.
 * Also easy to install at VPS providers that do not provide an Alpine installer.
 * Install time is about 1 minute.
+* ZFS Native Encryption with a prompt for keyphrase.
 
 ![image](https://github.com/psy0rz/alpinebox/assets/1179017/fc9fb0a9-d88f-4943-814f-9f39d1be11a0)
 
@@ -31,25 +32,28 @@ For this reason all our boxes run Alpine and just auto-upgrade and reboot every 
 
 # Installing 
 
-Installation by just writing the official image to the disk is the easiest way:
+1. 'setup-interfaces -r'
 
-* Boot any Linux distro via CD, USB. Or use a rescue-boot if you use some kind of VPS hosting provider. (example screenshot below)
-* It doesn't matter if this linux distro has UEFI or legacy boot, the image contains both and should always boot. (you can even switch between uefi and legacy afterwards)
-* Download the imager:
-```
-# wget https://boot.datux.nl/image
-```
-*NOTE: This is just a redirect to https://raw.githubusercontent.com/psy0rz/alpinebox/master/install/installimage.sh*
+2. 'setup-apkrepos'
 
-* Start the imager and specify your harddisk:
-```
-# bash image /dev/sda
-```
-This should download and write the image to disk, and you're basically done :)
+3. 'apk add git'
 
-You can now reboot, but for some VPS providers a powercycle is needed.
+4. 'mkdir /tmp && cd /tmp'
 
-If you have trouble installing. see [VPS provider tips](#vps-provider-tips)
+5. 'git clone --depth 1 https://github.com/psy0rz/alpinebox.git upstream'
+
+6. 'git clone https://github.com/TommyTipsy/alpinebox-enc.git'
+
+7. 'cp /tmp/alpine-enc/install/4-create-zpool.sh /tmp/upstream/install/'
+
+8. 'cp /tmp/alpine-enc/install/5-install-alpine.sh /tmp/upstream/install/'
+
+9. 'cp /tmp/alpine-enc/install/config /tmp/upstream/install
+
+10. 'cd upstream/install'
+
+11. 'sh install.sh /dev/X' (replace X with desired disk to install onto)
+
 
 ## Login
 
