@@ -36,23 +36,25 @@ For this reason all our boxes run Alpine and just auto-upgrade and reboot every 
 
 2. setup-apkrepos
 
-3. apk add git
+3. apk update
 
-4. mkdir /tmp && cd /tmp
+4. apk add git
 
-5. git clone --depth 1 https://github.com/psy0rz/alpinebox.git upstream
+5. mkdir /tmp && cd /tmp
 
-6. git clone https://github.com/TommyTipsy/alpinebox-enc.git
+6. git clone --depth 1 https://github.com/psy0rz/alpinebox.git upstream
 
-7. cp /tmp/alpine-enc/install/4-create-zpool.sh /tmp/upstream/install/
+7. git clone https://github.com/TommyTipsy/alpinebox-enc.git
 
-8. cp /tmp/alpine-enc/install/5-install-alpine.sh /tmp/upstream/install/
+8. cp /tmp/alpine-enc/install/4-create-zpool.sh /tmp/upstream/install/
 
-9. cp /tmp/alpine-enc/install/config /tmp/upstream/install
+9. cp /tmp/alpine-enc/install/5-install-alpine.sh /tmp/upstream/install/
 
-10. cd upstream/install
+10. cp /tmp/alpine-enc/install/config /tmp/upstream/install
 
-11. sh install.sh /dev/X (replace X with desired disk to install onto)
+11. cd upstream/install
+
+12. sh install.sh /dev/X (replace X with desired disk to install onto)
 
 This copies the relevant changes onto the base script.
 
