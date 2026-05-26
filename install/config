@@ -1,9 +1,5 @@
 # Variable config 
 
-INSTALL_ENCRYPT=${INSTALL_ENCRYPT:-1}
-
-INSTALL_KEYFILE=/etc/zfs/rpool.key
-
 INSTALL_DISK=$1
 
 if ! [ "$INSTALL_DISK" ]; then
@@ -11,9 +7,9 @@ if ! [ "$INSTALL_DISK" ]; then
     exit 1
 fi
 
-INSTALL_EFI_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "3p"` # partition #2
-INSTALL_SWAP_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "4p"` # partition #3
-INSTALL_ZPOOL_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "5p"` # partition #4
+INSTALL_EFI_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "3p"`
+INSTALL_SWAP_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "4p"`
+INSTALL_ZPOOL_DEV=`lsblk -p -x NAME -ln -o NAME $INSTALL_DISK 2>/dev/null | sed -n "5p"`
 INSTALL_ZPOOL=rpool
 INSTALL_ROOT=/mnt/newroot
 
@@ -24,5 +20,8 @@ echo "ALPINEBOX: INSTALL_ZPOOL_DEV = $INSTALL_ZPOOL_DEV"
 
 
 APPEND="loglevel=4"
+
+INSTALL_ENCRYPT=${INSTALL_ENCRYPT:-1}
+INSTALL_KEYFILE=/etc/zfs/rpool.key
 
 source versions
