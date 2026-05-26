@@ -1,5 +1,9 @@
 # Variable config 
 
+INSTALL_ENCRYPT=${INSTALL_ENCRYPT:-1}
+
+INSTALL_KEYFILE=/etc/zfs/rpool.key
+
 INSTALL_DISK=$1
 
 if ! [ "$INSTALL_DISK" ]; then
