@@ -30,7 +30,7 @@ Also upgrading to newer releases is quick and painless, in contrast to other dis
 
 For this reason all our boxes run Alpine and just auto-upgrade and reboot every week without problems.
 
-# Installing from the Alpine Linux live ISO (any distribution should work similarly)
+# Installing from the Alpine Linux Live ISO
 
 1. setup-interfaces -r
 
