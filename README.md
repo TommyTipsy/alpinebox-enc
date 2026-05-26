@@ -42,17 +42,17 @@ For this reason all our boxes run Alpine and just auto-upgrade and reboot every 
 
 5. cd /tmp
 
-6. git clone --depth 1 https://github.com/psy0rz/alpinebox.git upstream
+6. git clone --depth 1 https://github.com/psy0rz/alpinebox.git
 
 7. git clone https://github.com/TommyTipsy/alpinebox-enc.git
 
-8. cp /tmp/alpine-enc/install/4-create-zpool.sh /tmp/upstream/install/
+8. cp /tmp/alpinebox-enc/install/4-create-zpool.sh /tmp/alpinebox/install/
 
-9. cp /tmp/alpine-enc/install/5-install-alpine.sh /tmp/upstream/install/
+9. cp /tmp/alpinebox-enc/install/5-install-alpine.sh /tmp/alpinebox/install/
 
-10. cp /tmp/alpine-enc/install/config /tmp/upstream/install
+10. cp /tmp/alpinebox-enc/install/config /tmp/alpinebox/install
 
-11. cd upstream/install
+11. cd alpinebox/install
 
 12. sh install.sh /dev/X (replace X with desired disk to install onto)
 
