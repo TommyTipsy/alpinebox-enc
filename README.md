@@ -1,3 +1,7 @@
+This is a fork of Alpinebox with ZFSBootMenu that also includes ZFS Native Encryption.
+
+
+
 # Features
 
 This is an installer for [Alpine linux](https://www.alpinelinux.org/) with ZFS as root filesystem, and [ZFSBootMenu](https://docs.zfsbootmenu.org/) to boot into different environments.
