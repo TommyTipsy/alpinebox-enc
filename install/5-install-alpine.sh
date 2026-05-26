@@ -15,7 +15,9 @@ apk --allow-untrusted -U --root $INSTALL_ROOT --initdb add \
 
 cp /etc/hostid $INSTALL_ROOT/etc
 cp /etc/resolv.conf $INSTALL_ROOT/etc
-if [[ -e /etc/network/interfaces ]]; then
+if 
+[
+[ -e /etc/network/interfaces ]]; then
     cp /etc/network/interfaces $INSTALL_ROOT/etc/network
 else
     cp files/interfaces $INSTALL_ROOT/etc/network
@@ -28,12 +30,29 @@ mount --rbind /proc $INSTALL_ROOT/proc
 # Blacklist GPUs (issue #3)
 cp files/blacklist-gpu.conf $INSTALL_ROOT/etc/modprobe.d
 
+if 
+[ "$INSTALL_ENCRYPT" = "1" ]; then
+    install -d -m 700 $INSTALL_ROOT/etc/zfs
+    ( umask 077 && cp /tmp/rpool.key $INSTALL_ROOT$INSTALL_KEYFILE )
+    chmod 400 $INSTALL_ROOT$INSTALL_KEYFILE
+    zfs set keylocation=file://$INSTALL_KEYFILE $INSTALL_ZPOOL/ROOT
+fi
+
 # zfs stuff
 echo "/etc/hostid" >>$INSTALL_ROOT/etc/mkinitfs/features.d/zfshost.files
+if 
+[ "$INSTALL_ENCRYPT" = "1" ]; then
+    echo "$INSTALL_KEYFILE" >>$INSTALL_ROOT/etc/mkinitfs/features.d/zfshost.files
+fi
 echo 'features="ata base keymap kms mmc nvme scsi usb virtio zfs zfshost"' >$INSTALL_ROOT/etc/mkinitfs/mkinitfs.conf
 
 # rebuild initfs for above two things
 chroot $INSTALL_ROOT mkinitfs $(ls $INSTALL_ROOT/lib/modules)
+
+if 
+[ "$INSTALL_ENCRYPT" = "1" ]; then
+    chmod 600 $INSTALL_ROOT/boot/initramfs-* 2>/dev/null || true
+fi
 
 # services
 chroot $INSTALL_ROOT rc-update add hwdrivers sysinit
@@ -54,5 +73,10 @@ chroot $INSTALL_ROOT rc-update add sysctl default
 cat >$INSTALL_ROOT/etc/fstab <<EOF
 tmpfs	/tmp	tmpfs	nosuid,nodev	0	0
 EOF
+
+if 
+[ "$INSTALL_ENCRYPT" = "1" ]; then
+    shred -u /tmp/rpool.key 2>/dev/null || rm -f /tmp/rpool.key
+fi
 
 echo "ALPINEBOX: done"
