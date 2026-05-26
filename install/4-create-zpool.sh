@@ -1,17 +1,9 @@
 #!/bin/sh
-# Environment variables:
-# INSTALL_ZPOOL: The name of the zpool (e.g. rpool)
-# INSTALL_ZPOOL_DEV: The device for the zpool (e.g. /dev/sda4)
-
 set -e
-
-
 source config
+
 echo "ALPINEBOX: Creating zpool on $INSTALL_ZPOOL_DEV"
-
-
 zgenhostid -f
-
 
 zpool create \
     -f \
@@ -29,15 +21,41 @@ zpool create \
     -R $INSTALL_ROOT \
     $INSTALL_ZPOOL $INSTALL_ZPOOL_DEV
 
-zfs create -o mountpoint=/ -o canmount=noauto $INSTALL_ZPOOL/ROOT
-zpool set bootfs=$INSTALL_ZPOOL/ROOT $INSTALL_ZPOOL
+if 
+[ "$INSTALL_ENCRYPT" = "1" ]; then
+    echo
+    echo "ALPINEBOX: Set a passphrase for the root pool encryption."
+    echo "           You will be prompted for this at every boot in ZFSBootMenu."
+    echo
 
-# zpool export $INSTALL_ZPOOL
-# zpool import -N -R /mnt $INSTALL_ZPOOL
+    while :; do
+        stty -echo
+        printf "Passphrase: "; IFS= read -r PASS1; echo
+        printf "Confirm:    "; IFS= read -r PASS2; echo
+        stty echo
+        
+[ -n "$PASS1" ] && 
+[ "$PASS1" = "$PASS2" ] && break
+        echo "Empty or mismatch, try again."
+    done
+
+    ( umask 077 && printf '%s' "$PASS1" > /tmp/rpool.key )
+    unset PASS1 PASS2
+
+    zfs create \
+        -o mountpoint=/ \
+        -o canmount=noauto \
+        -o encryption=aes-256-gcm \
+        -o keyformat=passphrase \
+        -o keylocation=file:///tmp/rpool.key \
+        $INSTALL_ZPOOL/ROOT
+else
+    zfs create -o mountpoint=/ -o canmount=noauto $INSTALL_ZPOOL/ROOT
+fi
+
+zpool set bootfs=$INSTALL_ZPOOL/ROOT $INSTALL_ZPOOL
 zfs mount $INSTALL_ZPOOL/ROOT
 
-#set default zfsbootmenu kernel commandline
 zfs set org.zfsbootmenu:commandline="$APPEND" $INSTALL_ZPOOL/ROOT
-
 
 echo "ALPINEBOX: Done, $INSTALL_ZPOOL mounted under $INSTALL_ROOT"
