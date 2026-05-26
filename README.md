@@ -50,7 +50,7 @@ For this reason all our boxes run Alpine and just auto-upgrade and reboot every 
 
 9. cp /tmp/alpinebox-enc/install/5-install-alpine.sh /tmp/alpinebox/install/
 
-10. cp /tmp/alpinebox-enc/install/config /tmp/alpinebox/install
+10. cp /tmp/alpinebox-enc/install/config /tmp/alpinebox/install/
 
 11. cd alpinebox/install
 
