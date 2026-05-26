@@ -40,7 +40,7 @@ For this reason all our boxes run Alpine and just auto-upgrade and reboot every 
 
 4. apk add git
 
-5. mkdir /tmp && cd /tmp
+5. cd /tmp
 
 6. git clone --depth 1 https://github.com/psy0rz/alpinebox.git upstream
 
