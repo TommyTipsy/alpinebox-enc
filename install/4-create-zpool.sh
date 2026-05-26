@@ -12,8 +12,6 @@ echo "ALPINEBOX: Creating zpool on $INSTALL_ZPOOL_DEV"
 
 zgenhostid -f
 
-printf "%s" "$ZFS_PASS" > /etc/zfs/zroot.key
-chmod 000 /etc/zfs/zroot.key
 
 zpool create \
     -f \
