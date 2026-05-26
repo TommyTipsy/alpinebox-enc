@@ -9,24 +9,6 @@ set -e
 source config
 echo "ALPINEBOX: Creating zpool on $INSTALL_ZPOOL_DEV"
 
-printf "ZFS Passphrase: "
-stty -echo
-read -r ZFS_PASS
-stty echo
-printf "\n"
-
-printf "Confirm ZFS Passphrase: "
-stty -echo
-read -r ZFS_PASS2
-stty echo
-printf "\n"
-
-if 
-[ "$ZFS_PASS" != "$ZFS_PASS2" ] || 
-[ -z "$ZFS_PASS" ]; then
-    echo "ERROR: Passphrases do not match or are empty. Aborting."
-    exit 1
-fi
 
 zgenhostid -f
 
@@ -40,9 +22,6 @@ zpool create \
     -O mountpoint=none \
     -O acltype=posixacl \
     -O compression=on \
-    -O encryption=aes-256-gcm \
-    -O keylocation=file:///etc/zfs/zroot.key \
-    -O keyformat=passphrase \
     -o autoexpand=on \
     -O dnodesize=auto \
     -O normalization=formD \
