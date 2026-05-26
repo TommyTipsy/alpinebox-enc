@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 source config
-
 echo "ALPINEBOX: Creating zpool on $INSTALL_ZPOOL_DEV"
+
 zgenhostid -f
 
 zpool create \
@@ -24,8 +24,9 @@ zpool create \
 if 
 [ "$INSTALL_ENCRYPT" = "1" ]; then
     echo
-    echo "ALPINEBOX: Set a passphrase for the root pool encryption."
-    echo "           You will be prompted for this at every boot in ZFSBootMenu."
+    echo "ALPINEBOX: Set a passphrase for ZFS native encryption."
+    echo "ALPINEBOX: You will be prompted for this at every boot in ZFSBootMenu."
+    echo "ALPINEBOX: If you forget it, your data is unrecoverable."
     echo
 
     while :; do
@@ -33,10 +34,17 @@ if
         printf "Passphrase: "; IFS= read -r PASS1; echo
         printf "Confirm:    "; IFS= read -r PASS2; echo
         stty echo
-        
-[ -n "$PASS1" ] && 
-[ "$PASS1" = "$PASS2" ] && break
-        echo "Empty or mismatch, try again."
+        if 
+[ -z "$PASS1" ]; then
+            echo "Passphrase cannot be empty, try again."
+            continue
+        fi
+        if 
+[ "$PASS1" != "$PASS2" ]; then
+            echo "Passphrases do not match, try again."
+            continue
+        fi
+        break
     done
 
     ( umask 077 && printf '%s' "$PASS1" > /tmp/rpool.key )
@@ -54,6 +62,7 @@ else
 fi
 
 zpool set bootfs=$INSTALL_ZPOOL/ROOT $INSTALL_ZPOOL
+
 zfs mount $INSTALL_ZPOOL/ROOT
 
 zfs set org.zfsbootmenu:commandline="$APPEND" $INSTALL_ZPOOL/ROOT
